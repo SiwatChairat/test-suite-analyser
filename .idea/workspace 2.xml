@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:gpeal" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="329e2436-95eb-43a6-87e0-fc18c72a9e9d" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
+  </component>
+  <component name="ProjectId" id="1kNJgXbddStDrXd2H2xqjQT9afV" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2001756" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
+  </component>
+  <component name="RunManager" selected="Application.App">
+    <configuration name="App" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="analyser.App" />
+      <module name="analyser.app.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="analyser.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="analyser" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list />
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Application.App" />
+      <item itemvalue="Gradle.analyser" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.App" />
+        <item itemvalue="Gradle.analyser" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="329e2436-95eb-43a6-87e0-fc18c72a9e9d" name="Default Changelist" comment="" />
+      <created>1605535226759</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1605535226759</updated>
+      <workItem from="1605535227851" duration="228000" />
+      <workItem from="1605535472123" duration="7000" />
+      <workItem from="1605536462940" duration="1973000" />
+      <workItem from="1605539431749" duration="1565000" />
+      <workItem from="1605543945938" duration="742000" />
+      <workItem from="1605545233410" duration="497000" />
+      <workItem from="1605546293209" duration="413000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="279" y="196" width="1071" height="706" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1605535367353">
+      <screen x="0" y="25" width="1630" height="1025" />
+    </state>
+    <state x="279" y="196" width="1071" height="706" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.25.1630.1025@0.25.1630.1025" timestamp="1605535367353" />
+    <state x="603" y="283" key="FileChooserDialogImpl" timestamp="1605535971016">
+      <screen x="0" y="25" width="1630" height="1025" />
+    </state>
+    <state x="603" y="283" key="FileChooserDialogImpl/0.25.1630.1025@0.25.1630.1025" timestamp="1605535971016" />
+    <state width="1358" height="264" key="GridCell.Tab.0.bottom" timestamp="1605545740158">
+      <screen x="0" y="25" width="1629" height="1025" />
+    </state>
+    <state width="1358" height="264" key="GridCell.Tab.0.bottom/0.25.1629.1025@0.25.1629.1025" timestamp="1605545740158" />
+    <state width="1358" height="264" key="GridCell.Tab.0.bottom/0.25.1630.1025@0.25.1630.1025" timestamp="1605542638941" />
+    <state width="1358" height="264" key="GridCell.Tab.0.center" timestamp="1605545740157">
+      <screen x="0" y="25" width="1629" height="1025" />
+    </state>
+    <state width="1358" height="264" key="GridCell.Tab.0.center/0.25.1629.1025@0.25.1629.1025" timestamp="1605545740157" />
+    <state width="1358" height="264" key="GridCell.Tab.0.center/0.25.1630.1025@0.25.1630.1025" timestamp="1605542638938" />
+    <state width="1358" height="264" key="GridCell.Tab.0.left" timestamp="1605545740156">
+      <screen x="0" y="25" width="1629" height="1025" />
+    </state>
+    <state width="1358" height="264" key="GridCell.Tab.0.left/0.25.1629.1025@0.25.1629.1025" timestamp="1605545740156" />
+    <state width="1358" height="264" key="GridCell.Tab.0.left/0.25.1630.1025@0.25.1630.1025" timestamp="1605542638936" />
+    <state width="1358" height="264" key="GridCell.Tab.0.right" timestamp="1605545740157">
+      <screen x="0" y="25" width="1629" height="1025" />
+    </state>
+    <state width="1358" height="264" key="GridCell.Tab.0.right/0.25.1629.1025@0.25.1629.1025" timestamp="1605545740157" />
+    <state width="1358" height="264" key="GridCell.Tab.0.right/0.25.1630.1025@0.25.1630.1025" timestamp="1605542638940" />
+    <state x="324" y="173" key="SettingsEditor" timestamp="1605535446752">
+      <screen x="0" y="25" width="1630" height="1025" />
+    </state>
+    <state x="324" y="173" key="SettingsEditor/0.25.1630.1025@0.25.1630.1025" timestamp="1605535446752" />
+    <state x="545" y="443" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1605542629295">
+      <screen x="0" y="25" width="1630" height="1025" />
+    </state>
+    <state x="545" y="443" key="vcs.readOnlyHandler.ReadOnlyStatusDialog/0.25.1630.1025@0.25.1630.1025" timestamp="1605542629295" />
+  </component>
+</project>

@@ -1,9 +1,6 @@
 package analyser;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
 
@@ -40,13 +37,14 @@ public class AppCompile {
         for (int j = 1; j <= noOfRep; j++){
             try {
                 builder.directory(dir);
+                cmd.add(new String[]{"git", "clean", "-fd"});
                 cmd.add(new String[]{"git", "checkout", repoHead});
-                cmd.add(new String[]{"git", "show", "HEAD"});
+                modifyGradle();
                 cmd.add(new String[]{"./gradlew", "clean", "build", "--continue", "test"});
 
                 System.out.println("computing ... " + "(" + j + ")");
 
-                for (int i = 0; i < 3; i++) {
+                for (int i = 0; i < cmd.size(); i++) {
                     builder.command(cmd.get(i));
                     Process ssh = builder.start();
                     BufferedReader stdInput = new BufferedReader(new InputStreamReader(ssh.getInputStream()));
@@ -74,6 +72,7 @@ public class AppCompile {
                 System.exit(0);
             }
             timeList.add(currentLine);
+            cmd.clear();
         }
     }
 
@@ -119,7 +118,7 @@ public class AppCompile {
 
     public String getTestResult() {
         String testResult = "The test results are not the same";
-        if (checkAllTestResult(testList)) {
+        if (checkAllTestResult(testList) && testList.size() != 0) {
             testResult = testList.get(0);
             testList.clear();
             return testResult;
@@ -150,7 +149,24 @@ public class AppCompile {
         return changeLink;
     }
 
-    public String getCompileTime() {
+    private void modifyGradle() throws IOException {
+        File fileToBeModified = new File(currDir + "/" + repoName + "/build.gradle");
+        String oldContent = "";
+        BufferedReader reader = new BufferedReader(new FileReader(fileToBeModified));
+        String line = reader.readLine();
+        while (line != null)
+        {
+            oldContent = oldContent + line + System.lineSeparator();
+            line = reader.readLine();
+        }
+        String newContent = oldContent.replaceAll("git = Grgit.open(.*)", "git = Grgit.open(currentDir: project.rootDir)");
+        FileWriter writer = new FileWriter(fileToBeModified);
+        writer.write(newContent);
+        reader.close();
+        writer.close();
+    }
+
+    public String getCompileTime() throws IOException {
         calcCompileTime();
         String time;
         double totalTime = 0.0;
