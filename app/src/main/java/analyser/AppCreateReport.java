@@ -121,7 +121,7 @@ public class AppCreateReport {
             Date test1 = stringToDate(from, "d/MM/yyyy");
             Date test2 = stringToDate(to, "d/MM/yyyy");
             ArrayList<String> head = headInInterval(test1, test2, list2);
-            System.out.println(head.size());
+            System.out.println("Number of file in interval " + (i + 1) + ": " + head.size());
             for (int j = 0; j < head.size() - 1; j++) {
                 String head1 = head.get(j);
                 String head2 = head.get(j + 1);
