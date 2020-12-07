@@ -11,11 +11,14 @@ import java.util.Scanner;
  * @author Siwat
  */
 @SuppressWarnings("ALL")
+// THIS IS CURRENTLY NOT IN-USE
 public class AppRepo {
 
+    /*
+    Ask for github repo link and from the link get the name of the repo
+     */
     public ArrayList<String> getRepo() throws IOException {
         ArrayList<String> list = new ArrayList<>();
-
         System.out.println("Enter GitHub Repo HTTPS: ");
         Scanner in = new Scanner(System.in);
         String repoLink = in.nextLine();
@@ -30,6 +33,9 @@ public class AppRepo {
         return list;
     }
 
+    /*
+    Check whether the specified already exist or not.
+     */
     public boolean checkRepo(String repoName) {
         String currDir = System.getProperty("user.dir");
         String finalPath = currDir + "/" + repoName;
@@ -57,6 +63,9 @@ public class AppRepo {
         return false;
     }
 
+    /*
+    Download the specified repo link, as well as asking permission from the user first
+     */
     public void downloadRepo(String repoLink) throws IOException {
         Scanner in = new Scanner(System.in);
         File dir = new File(System.getProperty("user.dir"));

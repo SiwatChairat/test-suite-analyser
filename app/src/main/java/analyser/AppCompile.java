@@ -2,6 +2,7 @@ package analyser;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -15,67 +16,95 @@ Make sure your local SDK is linked to the project
 public class AppCompile {
     String repoName;
     String repoHead;
-    int noOfRep;
-
-    public AppCompile(String name, String head, int rep) {
-        repoName = name;
-        repoHead = head.replace(" ", "");
-        noOfRep = rep;
-    }
-
     String currDir = System.getProperty("user.dir");
     ArrayList<String> testList = new ArrayList<>();
     ArrayList<String> timeList = new ArrayList<>();
-    String commitComment;
     String changeLink;
 
-    private void calcCompileTime() {
+    public AppCompile(String name, String head) {
+        repoName = name;
+        // Replacing any whitespace to prevent error causing by extra whitespace.
+        repoHead = head.replace(" ", "");
+    }
+
+    /*
+    Compile the project by removing any untracked file, stash all the repo and then checkout to the desired head and
+    build the project.
+     */
+    private void compile() {
         File dir = new File(currDir + "/" + repoName);
         ArrayList<String[]> cmd = new ArrayList<>();
         ProcessBuilder builder = new ProcessBuilder();
-        String currentLine = "";
-        for (int j = 1; j <= noOfRep; j++){
-            try {
-                builder.directory(dir);
-                cmd.add(new String[]{"git", "clean", "-fd"});
-                cmd.add(new String[]{"git", "checkout", repoHead});
-                modifyGradle();
-                cmd.add(new String[]{"./gradlew", "clean", "build", "--continue", "test"});
+        try {
+            builder.directory(dir);
+            cmd.add(new String[]{"git", "clean", "-fd"});
+            cmd.add(new String[]{"git", "stash"});
+            cmd.add(new String[]{"git", "checkout", repoHead});
+            cmd.add(new String[]{"git", "show", "head"});
+            cmd.add(new String[]{"./gradlew", "clean", "build", "--continue", "test"});
 
-                System.out.println("computing ... " + "(" + j + ")");
+            // Run each command in the ArrayList<String[]> cmd
+            for (String[] strings : cmd) {
+                builder.command(strings);
+                Process ssh = builder.start();
+                BufferedReader stdInput = new BufferedReader(new InputStreamReader(ssh.getInputStream()));
+                BufferedReader stdError = new BufferedReader(new InputStreamReader(ssh.getErrorStream()));
+                String output;
 
-                for (int i = 0; i < cmd.size(); i++) {
-                    builder.command(cmd.get(i));
-                    Process ssh = builder.start();
-                    BufferedReader stdInput = new BufferedReader(new InputStreamReader(ssh.getInputStream()));
-                    BufferedReader stdError = new BufferedReader(new InputStreamReader(ssh.getErrorStream()));
-                    String output;
-                    stdInput.close();
+                // When the ProcessBuilder reaches "git show head"  modify "build.gradle" file to prevent git repository
+                // not found error. This is because sometimes, the root of the git project is not specified by
+                // the developers.
+                if (Arrays.toString(strings).contains("show")) {
+                    modifyGradle();
+                }
 
-                    while ((output = stdError.readLine()) != null) {
-                        if (i < 2) {
-                            if (output.contains("HEAD is now at")) {
-                                commitComment = output;
-                            }
+                // Read input to find test results as well as build time
+                while ((output = stdInput.readLine()) != null) {
+                    //System.out.println(output);
+                    if ((output.matches("(.*)tests completed(.*)"))) {
+                        testList.add(output);
+                    }
+                    if ((output.matches("BUILD(.*)in(.*)"))) {
+                        timeList.add(output);
+                    }
+                }
+
+                // Read error to find test results, error and build time
+                while ((output = stdError.readLine()) != null) {
+                    //System.out.println(output);
+                    //TODO: find a way to check every single test result from each build to improve accuracy
+                    if ((output.matches("(.*)tests completed(.*)"))) {
+                        testList.add(output);
+                    }
+                    if (output.matches("(.*)What went wrong:(.*)")) {
+                        while (!(output = stdError.readLine()).equals("")) {
                             System.out.println(output);
                         }
-                        if ((output.matches("(.*)tests completed(.*)"))) {
-                            testList.add(output);
-                        }
-                        currentLine = output;
                     }
-                    stdError.close();
+                    if ((output.matches("BUILD(.*)in(.*)"))) {
+                        timeList.add(output);
+                    }
+                }
+                //TODO: find a way to make processbuilder terminate
+
+                // THIS CURRENTLY DOES NOT WORK
+                // If the ProcessBuilder has been running for 10 minutes and still not finish, terminate it.
+                if (!ssh.waitFor(10, TimeUnit.MINUTES)) {
+                    ssh.destroyForcibly();
                     ssh.waitFor();
                 }
-            } catch (Exception e) {
-                // The program will never reach this point
-                System.exit(0);
+                stdInput.close();
+                stdError.close();
             }
-            timeList.add(currentLine);
-            cmd.clear();
+        } catch (Exception e) {
+            System.exit(0);
         }
+        cmd.clear();
     }
 
+    /*
+    Convert build time from string to double.
+     */
     private double extractTime(String timeS) {
         double time = 0.0;
         int index1 = timeS.indexOf("n ") + 1;
@@ -106,7 +135,9 @@ public class AppCompile {
         return time;
     }
 
-    // Check that each build has the same test results.
+    /*
+    Check whether the test results generated from the same head are the same or not.
+     */
     private boolean checkAllTestResult(ArrayList<String> list) {
         for (String s : list) {
             if (!s.equals(list.get(0))) {
@@ -116,8 +147,11 @@ public class AppCompile {
         return true;
     }
 
+    /*
+    Return test result.
+     */
     public String getTestResult() {
-        String testResult = "The test results are not the same";
+        String testResult = "No test results found";
         if (checkAllTestResult(testList) && testList.size() != 0) {
             testResult = testList.get(0);
             testList.clear();
@@ -130,10 +164,10 @@ public class AppCompile {
         return timeList;
     }
 
-    public String getCommitComment() {
-        return commitComment.substring(24);
-    }
-
+    /*
+    Run "git config --get remote.origin.url" to get repo link and then add the head to create a link, which navigates to
+    the changes on that commit.
+     */
     public String getChangeLink() throws IOException {
         ProcessBuilder builder = new ProcessBuilder();
         String[] cmd = {"git", "config", "--get", "remote.origin.url"};
@@ -144,30 +178,41 @@ public class AppCompile {
         String output;
         BufferedReader stdInput = new BufferedReader(new InputStreamReader(ssh.getInputStream()));
         while ((output = stdInput.readLine()) != null) {
-            changeLink = output + "/" + repoHead;
+            String temp = output.substring(0, output.length() - 4);
+            changeLink = temp + "/commit/" + repoHead;
         }
         return changeLink;
     }
 
+    /*
+    Modify build.gradle, if the developers forgot to put repo root in the file
+     */
     private void modifyGradle() throws IOException {
-        File fileToBeModified = new File(currDir + "/" + repoName + "/build.gradle");
-        String oldContent = "";
-        BufferedReader reader = new BufferedReader(new FileReader(fileToBeModified));
-        String line = reader.readLine();
-        while (line != null)
-        {
-            oldContent = oldContent + line + System.lineSeparator();
-            line = reader.readLine();
+        File file = new File(currDir + "/" + repoName + "/build.gradle");
+        if (file.exists()) {
+            StringBuilder oldContent = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String line = reader.readLine();
+            while (line != null) {
+                oldContent.append(line).append(System.lineSeparator());
+                line = reader.readLine();
+            }
+            String newContent = oldContent.toString().replaceAll("git = Grgit.open(.*)",
+                    "git = Grgit.open(currentDir: project.rootDir)");
+            FileWriter writer = new FileWriter(file);
+            writer.write(newContent);
+            writer.flush();
+            reader.close();
+            writer.close();
         }
-        String newContent = oldContent.replaceAll("git = Grgit.open(.*)", "git = Grgit.open(currentDir: project.rootDir)");
-        FileWriter writer = new FileWriter(fileToBeModified);
-        writer.write(newContent);
-        reader.close();
-        writer.close();
+
     }
 
-    public String getCompileTime() throws IOException {
-        calcCompileTime();
+    /*
+    Get averaged compile time
+     */
+    public String getAveragedCompileTime() {
+        compile();
         String time;
         double totalTime = 0.0;
         double averageTime;
@@ -176,7 +221,15 @@ public class AppCompile {
         }
         // convert millisecond to second and average it
         averageTime = ((totalTime / 1000) / timeList.size());
-        time = String.format("%.2f" , averageTime) + " second(s)";
+        time = String.format("%.2f", averageTime) + " second(s)";
         return time;
+    }
+
+    /*
+    Compile the project and return test results
+     */
+    public String buildProject() {
+        compile();
+        return getTestResult();
     }
 }
