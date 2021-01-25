@@ -17,8 +17,8 @@ public class AppCompile {
     String repoName;
     String repoHead;
     String currDir = System.getProperty("user.dir");
-    ArrayList<String> testList = new ArrayList<>();
-    ArrayList<String> timeList = new ArrayList<>();
+    ArrayList<String> testResultList = new ArrayList<>();
+    ArrayList<String> testCaseList = new ArrayList<>();
     String changeLink;
 
     public AppCompile(String name, String head) {
@@ -27,11 +27,16 @@ public class AppCompile {
         repoHead = head.replace(" ", "");
     }
 
+    private boolean checkGradle() {
+        File file = new File(currDir + "/" + repoName + "/" + "build.gradle");
+        return file.exists();
+    }
+
     /*
     Compile the project by removing any untracked file, stash all the repo and then checkout to the desired head and
     build the project.
-     */
-    private void compile() {
+    */
+    private void compileGradle() {
         File dir = new File(currDir + "/" + repoName);
         ArrayList<String[]> cmd = new ArrayList<>();
         ProcessBuilder builder = new ProcessBuilder();
@@ -41,7 +46,7 @@ public class AppCompile {
             cmd.add(new String[]{"git", "stash"});
             cmd.add(new String[]{"git", "checkout", repoHead});
             cmd.add(new String[]{"git", "show", "head"});
-            cmd.add(new String[]{"./gradlew", "clean", "build", "--continue", "test"});
+            cmd.add(new String[]{"./gradlew", "clean", "--continue", "test"});
 
             // Run each command in the ArrayList<String[]> cmd
             for (String[] strings : cmd) {
@@ -61,37 +66,30 @@ public class AppCompile {
                 // Read input to find test results as well as build time
                 while ((output = stdInput.readLine()) != null) {
                     //System.out.println(output);
+
+                    // Check test for gradle
                     if ((output.matches("(.*)tests completed(.*)"))) {
-                        testList.add(output);
-                    }
-                    if ((output.matches("BUILD(.*)in(.*)"))) {
-                        timeList.add(output);
+                        testResultList.add(output);
                     }
                 }
 
                 // Read error to find test results, error and build time
                 while ((output = stdError.readLine()) != null) {
                     //System.out.println(output);
-                    //TODO: find a way to check every single test result from each build to improve accuracy
+
+                    // Check test for gradle
                     if ((output.matches("(.*)tests completed(.*)"))) {
-                        testList.add(output);
-                    }
-                    if (output.matches("(.*)What went wrong:(.*)")) {
-                        while (!(output = stdError.readLine()).equals("")) {
-                            System.out.println(output);
-                        }
-                    }
-                    if ((output.matches("BUILD(.*)in(.*)"))) {
-                        timeList.add(output);
+                        testResultList.add(output);
                     }
                 }
-                //TODO: find a way to make processbuilder terminate
+                //TODO: find a way to make processbuilder terminate within 10 minutes if the program loops
 
                 // THIS CURRENTLY DOES NOT WORK
                 // If the ProcessBuilder has been running for 10 minutes and still not finish, terminate it.
                 if (!ssh.waitFor(10, TimeUnit.MINUTES)) {
                     ssh.destroyForcibly();
-                    ssh.waitFor();
+                    // Make the Thread sleep for 10 seconds to allow ssh to terminate successfully
+                    Thread.sleep(10000);
                 }
                 stdInput.close();
                 stdError.close();
@@ -102,38 +100,70 @@ public class AppCompile {
         cmd.clear();
     }
 
-    /*
-    Convert build time from string to double.
-     */
-    private double extractTime(String timeS) {
-        double time = 0.0;
-        int index1 = timeS.indexOf("n ") + 1;
-        int index2 = timeS.length();
-        String temp = timeS.substring(index1, index2);
-        List<String> list = new ArrayList<>(Arrays.asList(temp.split(" ")));
-        for (String t : list) {
-            int index3;
-            // minutes
-            if (t.matches("[0-9]*m")) {
-                index3 = t.indexOf("m");
-                String temp1 = t.substring(0, index3);
-                time += Double.parseDouble(temp1) * 60000;
+    private void compileMaven() {
+        File dir = new File(currDir + "/" + repoName);
+        ArrayList<String[]> cmd = new ArrayList<>();
+        ProcessBuilder builder = new ProcessBuilder();
+        try {
+            builder.directory(dir);
+            cmd.add(new String[]{"git", "clean", "-fd"});
+            cmd.add(new String[]{"git", "stash"});
+            cmd.add(new String[]{"git", "checkout", repoHead});
+            cmd.add(new String[]{"git", "show", "head"});
+            cmd.add(new String[]{"./mvnw", "clean", "test", "-fae"});
+
+            // Run each command in the ArrayList<String[]> cmd
+            for (String[] strings : cmd) {
+                builder.command(strings);
+                Process ssh = builder.start();
+                BufferedReader stdInput = new BufferedReader(new InputStreamReader(ssh.getInputStream()));
+                BufferedReader stdError = new BufferedReader(new InputStreamReader(ssh.getErrorStream()));
+                String output;
+
+                // When the ProcessBuilder reaches "git show head"  modify "build.gradle" file to prevent git repository
+                // not found error. This is because sometimes, the root of the git project is not specified by
+                // the developers.
+                if (Arrays.toString(strings).contains("show")) {
+                    modifyGradle();
+                }
+
+                // Read input to find test results as well as build time
+                while ((output = stdInput.readLine()) != null) {
+                    //System.out.println(output);
+                    // Check test for maven
+                    if ((output.matches("(.*)Tests run: [0-9]*, Failures: [0-9]*, Errors: [0-9]*, Skipped: [0-9]*"))) {
+                        testResultList.add(output);
+                    }
+                }
+
+                // Read error to find test results, error and build time
+                while ((output = stdError.readLine()) != null) {
+                    //System.out.println(output);
+
+                    // Check test for maven
+                    if ((output.matches("(.*)Tests run: [0-9]*, Failures: [0-9]*, Errors: [0-9]*, Skipped: [0-9]*"))) {
+                        testResultList.add(output);
+                    }
+
+                }
+                //TODO: find a way to make processbuilder terminate within 10 minutes if the program loops
+
+                // THIS CURRENTLY DOES NOT WORK
+                // If the ProcessBuilder has been running for 10 minutes and still not finish, terminate it.
+                if (!ssh.waitFor(10, TimeUnit.MINUTES)) {
+                    ssh.destroyForcibly();
+                    // Make the Thread sleep for 10 seconds to allow ssh to terminate successfully
+                    Thread.sleep(10000);
+                }
+                stdInput.close();
+                stdError.close();
             }
-            // seconds
-            else if (t.matches("[0-9]*s")) {
-                index3 = t.indexOf("s");
-                String temp1 = t.substring(0, index3);
-                time += Double.parseDouble(temp1) * 1000;
-            }
-            // milli seconds
-            else if (t.matches("[0-9]*ms")) {
-                index3 = t.indexOf("ms");
-                String temp1 = t.substring(0, index3);
-                time += Double.parseDouble(temp1);
-            }
+        } catch (Exception e) {
+            System.exit(0);
         }
-        return time;
+        cmd.clear();
     }
+
 
     /*
     Check whether the test results generated from the same head are the same or not.
@@ -150,18 +180,18 @@ public class AppCompile {
     /*
     Return test result.
      */
-    public String getTestResult() {
+    public String getFinalTestResult() {
         String testResult = "No test results found";
-        if (checkAllTestResult(testList) && testList.size() != 0) {
-            testResult = testList.get(0);
-            testList.clear();
+        if (checkAllTestResult(testResultList) && testResultList.size() != 0) {
+            testResult = testResultList.get(0);
+            testResultList.clear();
             return testResult;
         }
         return testResult;
     }
 
-    public ArrayList<String> getTimeList() {
-        return timeList;
+    public ArrayList<String> getTestCaseList() {
+        return testCaseList;
     }
 
     /*
@@ -187,14 +217,45 @@ public class AppCompile {
     /*
     Modify build.gradle, if the developers forgot to put repo root in the file
      */
-    private void modifyGradle() throws IOException {
+    public void modifyGradle() throws IOException {
         File file = new File(currDir + "/" + repoName + "/build.gradle");
+        boolean hasTestLogging = false;
         if (file.exists()) {
             StringBuilder oldContent = new StringBuilder();
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line = reader.readLine();
             while (line != null) {
-                oldContent.append(line).append(System.lineSeparator());
+                if (line.replaceAll(" ", "").compareTo("test{") == 0) {
+                    oldContent.append(line).append(System.lineSeparator());
+                    int bracketCounter = 0;
+                    bracketCounter++;
+                    while (bracketCounter != 0) {
+                        line = reader.readLine();
+                        oldContent.append(line).append(System.lineSeparator());
+                        if (line.contains("testLogging")) {
+                            hasTestLogging = true;
+                            line = reader.readLine();
+                            oldContent.append(line).append(System.lineSeparator());
+                            oldContent.append("\t events \"PASSED\", \"STARTED\", \"FAILED\", \"SKIPPED\"").
+                                    append(System.lineSeparator());
+                        }
+                        if (line.contains("{")) {
+                            bracketCounter++;
+                        } else if (line.contains("}")) {
+                            bracketCounter--;
+                        }
+                    }
+                    if (!hasTestLogging) {
+                        oldContent.setLength(oldContent.length() - 2);
+                        oldContent.append("testLogging {").append(System.lineSeparator());
+                        oldContent.append("\t events \"PASSED\", \"STARTED\", \"FAILED\", \"SKIPPED\"").
+                                append(System.lineSeparator());
+                        oldContent.append("}").append(System.lineSeparator());
+                        oldContent.append("}").append(System.lineSeparator());
+                    }
+                } else {
+                    oldContent.append(line).append(System.lineSeparator());
+                }
                 line = reader.readLine();
             }
             String newContent = oldContent.toString().replaceAll("git = Grgit.open(.*)",
@@ -209,27 +270,25 @@ public class AppCompile {
     }
 
     /*
-    Get averaged compile time
-     */
-    public String getAveragedCompileTime() {
-        compile();
-        String time;
-        double totalTime = 0.0;
-        double averageTime;
-        for (String t0 : timeList) {
-            totalTime += extractTime(t0);
-        }
-        // convert millisecond to second and average it
-        averageTime = ((totalTime / 1000) / timeList.size());
-        time = String.format("%.2f", averageTime) + " second(s)";
-        return time;
-    }
-
-    /*
     Compile the project and return test results
      */
     public String buildProject() {
-        compile();
-        return getTestResult();
+        System.out.println("build project");
+        if (checkGradle()) {
+            System.out.println("running GRADLE");
+            compileGradle();
+        } else {
+            System.out.println("running MAVEN");
+            compileMaven();
+        }
+        System.out.println(getTestCaseList());
+        System.out.println(getTestCaseList().size());
+        return getFinalTestResult();
     }
 }
+
+//grep testcase
+// grep 'failure message' target/surefire-reports/*
+// This message should find all the list of test failtures, then i have to use this message and store in a string and compare it with the next one
+// both maven and gradle produce the same test report, but there is a time function that i need to remove
+// remove the time function because not tall th

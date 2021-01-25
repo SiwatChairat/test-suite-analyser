@@ -28,3 +28,8 @@ application {
     // Define the main class for the application.
     mainClass = 'analyser.App'
 }
+
+run{
+    standardInput = System.in
+}
+

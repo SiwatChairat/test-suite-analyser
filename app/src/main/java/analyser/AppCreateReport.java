@@ -92,9 +92,9 @@ public class AppCreateReport {
     CHANGES LINK
      */
     public void writeToCsv() throws IOException, InterruptedException {
-        AppCommit a1 = new AppCommit(repoName, 1, "", "");
-        String testInterval = a1.intervalBetweenCommits(testPath, intervalNum, 0);
-        String log = a1.computeLog("");
+        AppCommit appCommit = new AppCommit(repoName, 1, "", "");
+        String testInterval = appCommit.intervalBetweenCommits(testPath, intervalNum, 0);
+        String log = appCommit.computeLog("");
         ArrayList<String> list1 = stringToArrayList(testInterval, "\n\n");
         ArrayList<String> list2 = stringToArrayList(log, "\n\n");
         FileWriter csvWriter = new FileWriter(fileName + ".csv");
@@ -118,6 +118,7 @@ public class AppCreateReport {
             String to = getIndex(list1.get(i), 2);
             String previousHead = "";
             String previousResult = "";
+            ArrayList<String> previousTestCaseResult = new ArrayList<>();
             Date test1 = stringToDate(from, "d/MM/yyyy");
             Date test2 = stringToDate(to, "d/MM/yyyy");
             ArrayList<String> head = headInInterval(test1, test2, list2);
@@ -127,23 +128,33 @@ public class AppCreateReport {
                 String head2 = head.get(j + 1);
                 String result1;
                 String result2;
+                ArrayList<String> testCaseResult1;
+                ArrayList<String> testCaseResult2 = new ArrayList<>();
                 AppCompile appCompile1 = new AppCompile(repoName, head1);
                 AppCompile appCompile2 = new AppCompile(repoName, head2);
                 if (head1.compareTo(previousHead) == 0) {
                     result1 = previousResult;
+                    testCaseResult1 = previousTestCaseResult;
                     result2 = appCompile2.buildProject();
                 } else {
                     result1 = appCompile1.buildProject();
                     result2 = appCompile2.buildProject();
+                    testCaseResult1 = appCompile1.getTestCaseList();
+                    testCaseResult2 = appCompile2.getTestCaseList();
                     previousHead = head2;
                     previousResult = result2;
+                    previousTestCaseResult = testCaseResult2;
                 }
                 String changeLink = appCompile1.getChangeLink();
                 // Print to terminal for checking
                 System.out.println(result1);
                 System.out.println(result2);
                 // If there is test results as well as the results of head1 and head2 are the same.
-                if (result1.compareTo(result2) == 0 && result1.compareTo("No test results found") != 0) {
+                if ((result1.compareTo(result2) == 0 && result1.compareTo("No test results found") != 0) &&
+                        (testCaseResult1.equals(testCaseResult2) && testCaseResult1.size() != 0)) {
+                    System.out.println(head1);
+                    System.out.println(testCaseResult1);
+                    System.out.println(testCaseResult2);
                     ArrayList<String> list3 = stringToArrayList(list2.get(getIndexIfContain(list2, head1)), "\n");
                     String date = list3.get(1);
                     String comment = list3.get(2);
