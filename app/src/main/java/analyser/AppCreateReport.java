@@ -92,6 +92,7 @@ public class AppCreateReport {
     CHANGES LINK
      */
     public void writeToCsv() throws IOException, InterruptedException {
+        int counter = 0;
         AppCommit appCommit = new AppCommit(repoName, 1, "", "");
         String testInterval = appCommit.intervalBetweenCommits(testPath, intervalNum, 0);
         String log = appCommit.computeLog("");
@@ -108,7 +109,7 @@ public class AppCreateReport {
         csvWriter.append(",");
         csvWriter.append("COMMENT");
         csvWriter.append(",");
-        csvWriter.append("TEST DATA");
+        csvWriter.append("TEST RESULT");
         csvWriter.append(",");
         csvWriter.append("CHANGES LINK");
         csvWriter.append("\n");
@@ -124,6 +125,7 @@ public class AppCreateReport {
             ArrayList<String> head = headInInterval(test1, test2, list2);
             System.out.println("Number of file in interval " + (i + 1) + ": " + head.size());
             for (int j = 0; j < head.size() - 1; j++) {
+                counter++;
                 String head1 = head.get(j);
                 String head2 = head.get(j + 1);
                 String result1;
@@ -147,14 +149,12 @@ public class AppCreateReport {
                 }
                 String changeLink = appCompile1.getChangeLink();
                 // Print to terminal for checking
+                // If there is test results as well as the results of head1 and head2 are the same.
                 System.out.println(result1);
                 System.out.println(result2);
-                // If there is test results as well as the results of head1 and head2 are the same.
-                if ((result1.compareTo(result2) == 0 && result1.compareTo("No test results found") != 0) &&
-                        (testCaseResult1.equals(testCaseResult2) && testCaseResult1.size() != 0)) {
+                if ((result1.compareTo(result2) == 0) && (testCaseResult1.equals(testCaseResult2) && testCaseResult1.size() != 0)) {
                     System.out.println(head1);
-                    System.out.println(testCaseResult1);
-                    System.out.println(testCaseResult2);
+                    System.out.println("MATCHED");
                     ArrayList<String> list3 = stringToArrayList(list2.get(getIndexIfContain(list2, head1)), "\n");
                     String date = list3.get(1);
                     String comment = list3.get(2);
@@ -177,6 +177,7 @@ public class AppCreateReport {
                     csvWriter.flush();
                     System.out.println(j);
                 }
+                System.out.println(counter);
             }
         }
         csvWriter.close();

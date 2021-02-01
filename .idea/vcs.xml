@@ -2,5 +2,11 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/gitProjects/RxJava" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/gitProjects/dubbo" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/gitProjects/guava" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/gitProjects/lottie-android" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/gitProjects/okhttp" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/gitProjects/retrofit" vcs="Git" />
   </component>
 </project>

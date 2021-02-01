@@ -1,11 +1,7 @@
 package analyser;
 
 import java.io.*;
-import java.text.ParseException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -18,21 +14,6 @@ import java.util.Scanner;
  Before running to program please make sure that the git project is runnable using ./gradlew clean build --continue test
  */
 public class App {
-
-    /*
-    Computing for device's spec
-     */
-    private static void deviceBasicSpecs() {
-        String nameOS = "os.name";
-        String versionOS = "os.version";
-        String architectureOS = "os.arch";
-        System.out.println("\nName of the OS: " +
-                System.getProperty(nameOS));
-        System.out.println("Version of the OS: " +
-                System.getProperty(versionOS));
-        System.out.println("Architecture of the OS: " +
-                System.getProperty(architectureOS) + "\n");
-    }
 
     /*
     Recursively keep asking for input, a blank line is not allowed
@@ -49,11 +30,11 @@ public class App {
     public static void run() throws IOException, InterruptedException {
         System.out.println("Please enter repo name: ");
         String repoName = askInput();
-        System.out.println("Please enter test path(from project repo): ");
+        System.out.println("Please enter test path from repo root: ");
         String testPath = askInput();
         System.out.println("Please enter number of test interval: ");
         int num = Integer.parseInt(askInput());
-        AppCreateReport appCreateReport = new AppCreateReport(repoName + " report1", testPath, repoName, num);
+        AppCreateReport appCreateReport = new AppCreateReport(repoName + " report", testPath, repoName, num);
         appCreateReport.writeToCsv();
     }
 
@@ -100,34 +81,43 @@ public class App {
         AppCompile appCompile = new AppCompile("okhttp", "");
         appCompile.modifyGradle();
     }
-    
+
     public static void testRun4() {
         String currDir = System.getProperty("user.dir");
-        // use okhttp because there are test cases in okhttp/test-results/test path
-        File dir = new File(currDir + "/okhttp" );
+        File dir = new File(currDir + "/gitProjects" );
         ProcessBuilder builder = new ProcessBuilder();
+        ArrayList<String> commands = new ArrayList<>();
         try {
             builder.directory(dir);
-            builder.command(new String[]{"find", ".", "'*.xml'", "-print0", "-exec", "grep", "'<failure message='", "{}", "+"});
-            //find . -name '*.xml' -print0 -exec grep '<failure message=' {} +
-            // the command should print lines in all of .xml files that contain failure message
+            commands.add("/bin/sh");
+            commands.add("-c");
+            commands.add("grep -r --include '*xml' '<testsuite' okhttp");
+            builder.command(commands);
             Process ssh = builder.start();
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(ssh.getInputStream()));
             String output;
             while ((output= stdInput.readLine()) != null) {
                 //Print to see the results
                 // nothing is print, taking the time taken in terminal, which is 1 second. I assume that this does not work.
-                System.out.println(output);
+                String temp = output.replaceAll("timestamp=(.*)\"", "");
+                System.out.println(temp);
             }
         } catch (Exception e) {
-
+            System.out.println(e);
         }
+    }
+
+    public static boolean testRun5() {
+            String currDir = System.getProperty("user.dir");
+            File file = new File(currDir + "/gitProjects/" + "retrofit" + "/" + "build.gradle");
+            return file.exists();
     }
 
 
 
+
     public static void main(String[] args) throws IOException, InterruptedException {
-        //run();
-        testRun4();
+        run();
+
     }
 }
