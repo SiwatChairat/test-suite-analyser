@@ -34,7 +34,9 @@ public class App {
         String testPath = askInput();
         System.out.println("Please enter number of test interval: ");
         int num = Integer.parseInt(askInput());
-        AppCreateReport appCreateReport = new AppCreateReport(repoName + " report", testPath, repoName, num);
+        System.out.println("Please enter report name: ");
+        String reportName = askInput();
+        AppCreateReport appCreateReport = new AppCreateReport(reportName + " report", testPath, repoName, num);
         appCreateReport.writeToCsv();
     }
 
