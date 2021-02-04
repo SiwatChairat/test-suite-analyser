@@ -58,8 +58,8 @@ public class AppCompile {
                 // If the ProcessBuilder has been running for 10 minutes and still not finish, terminate it.
                 if (!ssh.waitFor(10, TimeUnit.MINUTES)) {
                     ssh.destroyForcibly();
-                    // Make the Thread sleep for 10 seconds to allow ssh to terminate successfully
-                    Thread.sleep(10000);
+                    // Make the Thread sleep for 1 seconds to allow ssh to terminate successfully
+                    Thread.sleep(1000);
                 }
             }
         } catch (Exception e) {
@@ -197,6 +197,9 @@ public class AppCompile {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line = reader.readLine();
             while (line != null) {
+                oldContent.append(line).append(System.lineSeparator());
+                line = reader.readLine();
+            }
                 String newContent = oldContent.toString().replaceAll("git = Grgit.open(.*)",
                         "git = Grgit.open(currentDir: project.rootDir)");
                 FileWriter writer = new FileWriter(file);
@@ -204,7 +207,7 @@ public class AppCompile {
                 writer.flush();
                 reader.close();
                 writer.close();
-            }
+
 
         }
     }

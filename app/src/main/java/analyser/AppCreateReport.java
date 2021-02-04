@@ -1,5 +1,6 @@
 package analyser;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -98,7 +99,8 @@ public class AppCreateReport {
         String log = appCommit.computeLog("");
         ArrayList<String> list1 = stringToArrayList(testInterval, "\n\n");
         ArrayList<String> list2 = stringToArrayList(log, "\n\n");
-        FileWriter csvWriter = new FileWriter(fileName + ".csv");
+        File file = new File(fileName + ".csv");
+        FileWriter csvWriter = new FileWriter(file);
         csvWriter.append("NO. INTERVAL");
         csvWriter.append(",");
         csvWriter.append("INTERVAL RANGE");
