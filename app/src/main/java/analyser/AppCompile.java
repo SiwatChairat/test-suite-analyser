@@ -16,11 +16,10 @@ Make sure your local SDK is linked to the project
 public class AppCompile {
     String repoName;
     String repoHead;
-    String currDir = System.getProperty("user.dir");
-    ArrayList<String> testResultList = new ArrayList<>();
     ArrayList<String> testCaseList = new ArrayList<>();
     String changeLink;
-
+    String currDir = System.getProperty("user.dir").replaceAll("app", "");
+    
     public AppCompile(String name, String head) {
         repoName = name;
         // Replacing any whitespace to prevent error causing by extra whitespace.
@@ -28,7 +27,7 @@ public class AppCompile {
     }
 
     private boolean checkGradle() {
-        File file = new File(currDir + "/gitProjects/" + repoName + "/" + "build.gradle");
+        File file = new File(currDir + "gitProjects/" + repoName + "/" + "build.gradle");
         return file.exists();
     }
 
@@ -37,7 +36,7 @@ public class AppCompile {
     build the project.
     */
     private void compileGradle() {
-        File dir = new File(currDir + "/gitProjects/" + repoName);
+        File dir = new File(currDir + "gitProjects/" + repoName);
         ArrayList<String[]> cmd = new ArrayList<>();
         ProcessBuilder builder = new ProcessBuilder();
         try {
@@ -69,7 +68,7 @@ public class AppCompile {
     }
 
     private void compileMaven() {
-        File dir = new File(currDir + "/gitProjects/" + repoName);
+        File dir = new File(currDir + "gitProjects/" + repoName);
         ArrayList<String[]> cmd = new ArrayList<>();
         ProcessBuilder builder = new ProcessBuilder();
         try {
@@ -173,7 +172,7 @@ public class AppCompile {
     public String getChangeLink() throws IOException {
         ProcessBuilder builder = new ProcessBuilder();
         String[] cmd = {"git", "config", "--get", "remote.origin.url"};
-        File dir = new File(currDir + "/gitProjects/" + repoName);
+        File dir = new File(currDir + "gitProjects/" + repoName);
         builder.command(cmd);
         builder.directory(dir);
         Process ssh = builder.start();
@@ -190,8 +189,7 @@ public class AppCompile {
     Modify build.gradle, if the developers forgot to put repo root in the file
      */
     public void modifyGradle() throws IOException {
-        File file = new File(currDir + "/gitProjects/" + repoName + "/build.gradle");
-        boolean hasTestLogging = false;
+        File file = new File(currDir + "gitProjects/" + repoName + "/build.gradle");
         if (file.exists()) {
             StringBuilder oldContent = new StringBuilder();
             BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -207,8 +205,6 @@ public class AppCompile {
                 writer.flush();
                 reader.close();
                 writer.close();
-
-
         }
     }
 
