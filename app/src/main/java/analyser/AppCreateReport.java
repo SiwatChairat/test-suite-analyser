@@ -133,22 +133,22 @@ public class AppCreateReport {
                 String result1;
                 String result2;
                 ArrayList<String> testCaseResult1;
-                ArrayList<String> testCaseResult2 = new ArrayList<>();
+                ArrayList<String> testCaseResult2;
                 AppCompile appCompile1 = new AppCompile(repoName, head1);
                 AppCompile appCompile2 = new AppCompile(repoName, head2);
                 if (head1.compareTo(previousHead) == 0) {
                     result1 = previousResult;
-                    testCaseResult1 = previousTestCaseResult;
                     result2 = appCompile2.buildProject();
+                    testCaseResult1 = previousTestCaseResult;
                 } else {
                     result1 = appCompile1.buildProject();
                     result2 = appCompile2.buildProject();
                     testCaseResult1 = appCompile1.getTestCaseList();
-                    testCaseResult2 = appCompile2.getTestCaseList();
-                    previousHead = head2;
-                    previousResult = result2;
-                    previousTestCaseResult = testCaseResult2;
                 }
+                testCaseResult2 = appCompile2.getTestCaseList();
+                previousHead = head2;
+                previousResult = result2;
+                previousTestCaseResult = testCaseResult2;
                 String changeLink = appCompile1.getChangeLink();
                 // Print to terminal for checking
                 // If there is test results as well as the results of head1 and head2 are the same.

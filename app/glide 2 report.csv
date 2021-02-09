@@ -1,0 +1,2 @@
+NO. INTERVAL,INTERVAL RANGE,DATE,HEAD,COMMENT,TEST RESULT,CHANGES LINK
+1,11/01/2021-09/02/2021,Feb 1 2021,d521baa031f6034b74588a1e263c464f0d90d82b,    Merge pull request #4493 from sjudd:bump_version_to_4.13.0-SNAPSHOT,completed: 1709 skipped: 0 failures: 0 errors: 0,https://github.com/bumptech/glide/commit/d521baa031f6034b74588a1e263c464f0d90d82b
