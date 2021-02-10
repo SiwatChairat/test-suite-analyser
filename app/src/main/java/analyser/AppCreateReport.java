@@ -99,6 +99,7 @@ public class AppCreateReport {
         String log = appCommit.computeLog("");
         ArrayList<String> list1 = stringToArrayList(testInterval, "\n\n");
         ArrayList<String> list2 = stringToArrayList(log, "\n\n");
+        ArrayList<String> recordedHead = new ArrayList<>();
         File file = new File(fileName + ".csv");
         FileWriter csvWriter = new FileWriter(file);
         csvWriter.append("NO. INTERVAL");
@@ -154,9 +155,10 @@ public class AppCreateReport {
                 // If there is test results as well as the results of head1 and head2 are the same.
                 System.out.println(result1);
                 System.out.println(result2);
-                if ((result1.compareTo(result2) == 0) && (testCaseResult1.equals(testCaseResult2) && testCaseResult1.size() != 0)) {
+                if ((result1.compareTo(result2) == 0) && (testCaseResult1.equals(testCaseResult2) && testCaseResult1.size() != 0) && !recordedHead.contains(head1)) {
                     System.out.println(head1);
                     System.out.println("MATCHED");
+                    recordedHead.add(head1);
                     ArrayList<String> list3 = stringToArrayList(list2.get(getIndexIfContain(list2, head1)), "\n");
                     String date = list3.get(1);
                     String comment = list3.get(2);

@@ -1,0 +1,3 @@
+NO. INTERVAL,INTERVAL RANGE,DATE,HEAD,COMMENT,TEST RESULT,CHANGES LINK
+5,3/12/2020-15/12/2020,Dec 15 2020,2b55799273247661132f999d66943c6adb6ccc35,    Internal change,completed: 1709745 skipped: 515 failures: 1 errors: 0,https://github.com/google/guava/commit/2b55799273247661132f999d66943c6adb6ccc35
+9,10/11/2020-12/11/2020,Nov 12 2020,597b86c45e53c60b20ddba85c0f8c5fc8e278d19,    Backport ImmutableTable.combine,completed: 1709741 skipped: 515 failures: 1 errors: 0,https://github.com/google/guava/commit/597b86c45e53c60b20ddba85c0f8c5fc8e278d19

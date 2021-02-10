@@ -1,4 +1,0 @@
-NO. INTERVAL,INTERVAL RANGE,DATE,HEAD,COMMENT,TEST RESULT,CHANGES LINK
-1,28/08/2019-09/02/2021,Sep 3 2020,fcdebedf3276096db2f51bf6372b849b5a9c75ed,    Merge pull request #1628 from ZacSweers/patch-1,completed: 238 skipped: 0 failures: 10 errors: 0,https://github.com/JakeWharton/butterknife/commit/fcdebedf3276096db2f51bf6372b849b5a9c75ed
-1,28/08/2019-09/02/2021,Aug 12 2020,6dd38718417e3b50b64ac0a880b6bf9f2f932124,    Prepare next development version,completed: 238 skipped: 0 failures: 10 errors: 0,https://github.com/JakeWharton/butterknife/commit/6dd38718417e3b50b64ac0a880b6bf9f2f932124
-1,28/08/2019-09/02/2021,Aug 7 2020,442e6c23365426faa92c55c25a09309c4ad3dbf0,    Merge pull request #1623 from JakeWharton/jw/test/2020-08-07,completed: 238 skipped: 0 failures: 10 errors: 0,https://github.com/JakeWharton/butterknife/commit/442e6c23365426faa92c55c25a09309c4ad3dbf0
