@@ -161,7 +161,7 @@ public class AppCreateReport {
                     recordedHead.add(head1);
                     ArrayList<String> list3 = stringToArrayList(list2.get(getIndexIfContain(list2, head1)), "\n");
                     String date = list3.get(1);
-                    String comment = list3.get(2);
+                    String comment = list3.get(2).replaceAll(",", "");
                     csvWriter.append(intervalNo);
                     csvWriter.append(",");
                     csvWriter.append(from);

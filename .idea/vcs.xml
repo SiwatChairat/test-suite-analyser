@@ -2,15 +2,20 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/app/EventBus" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/gitProjects/EventBus" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/gitProjects/Hystrix" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/gitProjects/RxJava" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/gitProjects/butterknife" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/gitProjects/dubbo" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/gitProjects/glide" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/gitProjects/glide/library/src/test/resources/exif-orientation-examples" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/gitProjects/glide/library/test/src/test/resources/exif-orientation-examples" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/gitProjects/guava" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/gitProjects/lottie-android" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/gitProjects/material-dialogs" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/gitProjects/okhttp" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/gitProjects/plaid" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/gitProjects/retrofit" vcs="Git" />
   </component>
 </project>

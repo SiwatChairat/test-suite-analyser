@@ -1,4 +1,30 @@
 
+n.n.n / 2021-02-18
+==================
+
+  * fix duplicated results
+  * fix repeated run
+  * cleanup
+  * compatible with terminal and removed unused code
+  * add lottie-android report and cleanup
+  * fix looping problem in modifyGradle
+  * fix test interval bug
+  * new branch
+  * merge
+  * small change
+  * analyser working
+  * testRun4 bug
+  * tidy up print statements
+  * Program ables to generate .csv report
+  * fixed no .git dir found problem
+  * fix App.java problem
+  * program ables to compute for: most frequently changed files, ask and clone repo, compile time for gradle project
+  * Merge remote-tracking branch 'origin/main' into main
+  * program able to compute: frequently changed files, cloning new repo, compile time average by a specific number input by user.
+  * Update README.md
+  * initial commit
+  * first commit
+
 n.n.n / 2020-12-07
 ==================
 

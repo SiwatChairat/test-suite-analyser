@@ -223,9 +223,3 @@ public class AppCompile {
         return getFinalTestResult();
     }
 }
-
-//grep testcase
-// grep 'failure message' target/surefire-reports/*
-// This message should find all the list of test failtures, then i have to use this message and store in a string and compare it with the next one
-// both maven and gradle produce the same test report, but there is a time function that i need to remove
-// remove the time function
