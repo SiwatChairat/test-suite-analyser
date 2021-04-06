@@ -42,24 +42,15 @@ public class App {
         appCreateReport.writeToCsv();
     }
 
-    public static void run2() throws IOException, InterruptedException {
-        System.out.println("Please enter repo name: ");
-        String repoName = askInput();
-        System.out.println("Please enter absolute path to text files contain list of commits: ");
-        String filePath = askInput();
-        AppRunTime appRunTime = new AppRunTime(repoName, filePath);
-        appRunTime.exec();
-    }
-
     public static void main(String[] args) throws IOException, InterruptedException {
         System.out.println("Pleases choose your programme: ");
         System.out.println("1. Analyse GitRepo ");
-        System.out.println("2. Measure Runtime from list of commits");
+        System.out.println("2. Exit");
         String choice = askInput();
         if (choice.compareTo("1") == 0) {
             run();
         } else if (choice.compareTo("2") == 0) {
-            run2();
+            System.exit(0);
         } else {
             System.exit(0);
         }
