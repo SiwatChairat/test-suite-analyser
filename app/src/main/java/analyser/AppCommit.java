@@ -19,20 +19,22 @@ https://github.com/tj/git-extras/blob/master/Installation.md
 public class AppCommit {
 
     String repoName;
+    String filePath;
     String startDate;
     String endDate;
     int noOfFiles;
     String currDir = System.getProperty("user.dir").replaceAll("app", "");
 
-    public AppCommit(String name, int fileNum, String start, String end) {
+    public AppCommit(String name,String fPath, int fileNum, String start, String end) {
         repoName = name;
         noOfFiles = fileNum;
         startDate = start;
         endDate = end;
+        filePath = fPath.substring(0, fPath.lastIndexOf("/"));
     }
 
     private void checkoutMaster() throws IOException, InterruptedException {
-        File dir = new File(currDir + "gitProjects/" + repoName);
+        File dir = new File(filePath + "/" + repoName);
         ProcessBuilder builder = new ProcessBuilder();
         ArrayList<String[]> cmd = new ArrayList<>();
         cmd.add(new String[]{"git", "clean", "-fd"});
@@ -114,7 +116,7 @@ public class AppCommit {
         checkoutMaster();
         ArrayList<String> list = new ArrayList<>();
         try {
-            File dir = new File(currDir + "gitProjects/" + repoName);
+            File dir = new File(filePath + "/" + repoName);
             ProcessBuilder builder = new ProcessBuilder();
             String[] cmd;
             if (startDate.compareTo("") != 0 && endDate.compareTo("") == 0) {
@@ -165,9 +167,10 @@ public class AppCommit {
     Get date, commit head and commit comment from a specified path
      */
     public String computeLog(String path) throws IOException, InterruptedException {
+        System.out.println(filePath);
         // Make sure the repo is at the latest head
         checkoutMaster();
-        File dir = new File(currDir + "gitProjects/" + repoName);
+        File dir = new File(filePath + "/" + repoName);
         ProcessBuilder builder = new ProcessBuilder();
         String[] cmd;
         if (path.compareTo("") == 0) {
@@ -303,7 +306,7 @@ public class AppCommit {
     public void summary() {
         checkDate(startDate, endDate);
         try {
-            File dir = new File(currDir + "gitProjects/" + repoName);
+            File dir = new File(filePath + "/" + repoName);
             ProcessBuilder builder = new ProcessBuilder();
             String[] cmd;
             cmd = new String[]{"git", "summary"};

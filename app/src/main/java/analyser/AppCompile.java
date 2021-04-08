@@ -16,14 +16,16 @@ Make sure your local SDK is linked to the project
 public class AppCompile {
     String repoName;
     String repoHead;
+    String filePath;
     ArrayList<String> testCaseList = new ArrayList<>();
     String changeLink;
     String currDir = System.getProperty("user.dir").replaceAll("app", "");
     
-    public AppCompile(String name, String head) {
+    public AppCompile(String name,String fPath, String head) {
         repoName = name;
         // Replacing any whitespace to prevent error causing by extra whitespace.
         repoHead = head.replace(" ", "");
+        filePath = fPath.substring(0, fPath.lastIndexOf("/"));
     }
 
     private boolean checkGradle() {
@@ -36,7 +38,7 @@ public class AppCompile {
     build the project.
     */
     private void compileGradle() {
-        File dir = new File(currDir + "gitProjects/" + repoName);
+        File dir = new File(filePath);
         ArrayList<String[]> cmd = new ArrayList<>();
         ProcessBuilder builder = new ProcessBuilder();
         try {
@@ -68,7 +70,7 @@ public class AppCompile {
     }
 
     private void compileMaven() {
-        File dir = new File(currDir + "gitProjects/" + repoName);
+        File dir = new File(filePath);
         ArrayList<String[]> cmd = new ArrayList<>();
         ProcessBuilder builder = new ProcessBuilder();
         try {
@@ -111,7 +113,7 @@ public class AppCompile {
      */
     public String getFinalTestResult() {
         String testResult = "";
-        File dir = new File(currDir + "/gitProjects" );
+        File dir = new File(filePath);
         ProcessBuilder builder = new ProcessBuilder();
         ArrayList<String> commands = new ArrayList<>();
         int testCompleted = 0;
@@ -142,7 +144,7 @@ public class AppCompile {
     }
 
     public ArrayList<String> getTestCaseList() {
-        File dir = new File(currDir + "/gitProjects" );
+        File dir = new File(filePath );
         ProcessBuilder builder = new ProcessBuilder();
         ArrayList<String> commands = new ArrayList<>();
         try {
@@ -172,7 +174,7 @@ public class AppCompile {
     public String getChangeLink() throws IOException {
         ProcessBuilder builder = new ProcessBuilder();
         String[] cmd = {"git", "config", "--get", "remote.origin.url"};
-        File dir = new File(currDir + "gitProjects/" + repoName);
+        File dir = new File(filePath + "/" + repoName);
         builder.command(cmd);
         builder.directory(dir);
         Process ssh = builder.start();
@@ -189,7 +191,7 @@ public class AppCompile {
     Modify build.gradle, if the developers forgot to put repo root in the file
      */
     public void modifyGradle() throws IOException {
-        File file = new File(currDir + "gitProjects/" + repoName + "/build.gradle");
+        File file = new File(filePath + "/" + repoName + "/build.gradle");
         if (file.exists()) {
             StringBuilder oldContent = new StringBuilder();
             BufferedReader reader = new BufferedReader(new FileReader(file));

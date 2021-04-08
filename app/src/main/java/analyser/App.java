@@ -32,11 +32,11 @@ public class App {
     public static void run() throws IOException, InterruptedException {
         System.out.println("Please enter repo name: ");
         String repoName = askInput();
-        System.out.println("Please enter test path from repo root: ");
+        System.out.println("Please enter path to project: ");
+        String pathToRepo = askInput();
+        System.out.println("Please enter path to project test files: ");
         String testPath = askInput();
-        System.out.println("Please enter number of test interval: ");
-        int num = Integer.parseInt(askInput());
-        AppCreateReport appCreateReport = new AppCreateReport(repoName + " report", testPath, repoName, num);
+        AppCreateReport appCreateReport = new AppCreateReport(repoName + " report", testPath, repoName, pathToRepo);
         appCreateReport.writeToCsv();
     }
 

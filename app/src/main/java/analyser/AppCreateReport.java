@@ -10,14 +10,17 @@ import java.util.*;
 public class AppCreateReport {
     String fileName;
     String testPath;
+    String filePath;
     String repoName;
-    int intervalNum;
 
-    public AppCreateReport(String file, String path , String repo,int num) {
+
+    public AppCreateReport(String file, String tPath , String repo,String fPath) {
         fileName = file;
-        testPath = path;
+        testPath = tPath;
         repoName = repo;
-        intervalNum = num;
+        filePath = fPath;
+
+
     }
 
     /*
@@ -94,8 +97,8 @@ public class AppCreateReport {
      */
     public void writeToCsv() throws IOException, InterruptedException {
         int counter = 0;
-        AppCommit appCommit = new AppCommit(repoName, 1, "", "");
-        String testInterval = appCommit.intervalBetweenCommits(testPath, intervalNum, 0);
+        AppCommit appCommit = new AppCommit(repoName, filePath, 1, "", "");
+        String testInterval = appCommit.intervalBetweenCommits(testPath, 100000, 0);
         String log = appCommit.computeLog("");
         ArrayList<String> list1 = stringToArrayList(testInterval, "\n\n");
         ArrayList<String> list2 = stringToArrayList(log, "\n\n");
@@ -135,8 +138,8 @@ public class AppCreateReport {
                 String result2;
                 ArrayList<String> testCaseResult1;
                 ArrayList<String> testCaseResult2;
-                AppCompile appCompile1 = new AppCompile(repoName, head1);
-                AppCompile appCompile2 = new AppCompile(repoName, head2);
+                AppCompile appCompile1 = new AppCompile(repoName, filePath, head1);
+                AppCompile appCompile2 = new AppCompile(repoName, filePath, head2);
                 if (head1.compareTo(previousHead) == 0) {
                     result1 = previousResult;
                     result2 = appCompile2.buildProject();
